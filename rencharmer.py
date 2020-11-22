@@ -1,14 +1,27 @@
+import tempfile
+
 import click
 
 INDENTATION = "    "
 
 
 @click.command()
+@click.option("--file", is_flag=True)
 @click.argument("script", type=click.File())
-def main(script):
+def main(file, script):
     blocks = get_python_blocks(script)
     for block in blocks:
-        click.echo(block)
+        if file:
+            file_path = create_output_file(block)
+            click.echo(file_path)
+        else:
+            click.echo(block)
+
+
+def create_output_file(block):
+    with tempfile.NamedTemporaryFile("w", delete=False, suffix=".py") as output_file:
+        output_file.writelines(block.lines)
+        return output_file.name
 
 
 def get_python_blocks(script):
