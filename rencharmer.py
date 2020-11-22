@@ -41,8 +41,8 @@ def get_line_indentation_level(line):
 
 
 class PythonBlock(object):
-    def __init__(self, line):
-        self._indentation_level = get_line_indentation_level(line)
+    def __init__(self, initialization_line):
+        self._indentation_level = get_line_indentation_level(initialization_line)
         self.lines = []
 
     def add_line(self, line):
