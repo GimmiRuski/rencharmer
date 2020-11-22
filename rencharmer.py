@@ -1,5 +1,7 @@
 import click
 
+INDENTATION = "    "
+
 
 @click.command()
 @click.argument("script", type=click.File())
@@ -35,7 +37,7 @@ def get_python_blocks(script):
 
 
 def get_line_indentation_level(line):
-    return line.count("    ")
+    return line.count(INDENTATION)
 
 
 class PythonBlock(object):
@@ -44,7 +46,7 @@ class PythonBlock(object):
         self.lines = []
 
     def add_line(self, line):
-        line = line.replace("    ", "", self.indentation_level + 1)
+        line = line.replace(INDENTATION, "", self.indentation_level + 1)
         self.lines.append(line)
 
     def __str__(self):
