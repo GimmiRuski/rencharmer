@@ -58,10 +58,6 @@ class PythonBlock(object):
         self._indentation_level = get_line_indentation_level(initialization_line)
         self.lines = []
 
-    def add_line(self, line):
-        line = line.replace(INDENTATION, "", self.indentation_level + 1)
-        self.lines.append(line)
-
     def __str__(self):
         return "".join(self.lines)
 
@@ -74,6 +70,10 @@ class PythonBlock(object):
     @property
     def indentation_level(self):
         return self._indentation_level
+
+    def add_line(self, line):
+        line = line.replace(INDENTATION, "", self.indentation_level + 1)
+        self.lines.append(line)
 
 
 if __name__ == "__main__":
