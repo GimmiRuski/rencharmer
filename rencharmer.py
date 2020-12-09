@@ -49,13 +49,15 @@ def get_python_blocks(script):
     return blocks
 
 
-def get_line_indentation_level(line):
-    return line.count(INDENTATION)
+class RenpyScriptLine(str):
+    @property
+    def indentation_level(self):
+        return self.count(INDENTATION)
 
 
 class PythonBlock(object):
     def __init__(self, initialization_line):
-        self._indentation_level = get_line_indentation_level(initialization_line)
+        self._indentation_level = initialization_line.indentation_level
         self.lines = []
 
     def __str__(self):
