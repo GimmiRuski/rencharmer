@@ -9,6 +9,7 @@ INDENTATION = "    "
 @click.option("--file", is_flag=True)
 @click.argument("script", type=click.File())
 def main(file, script):
+    script = RenpyScript(script)
     for python_block in script.python_blocks:
         if file:
             file_path = create_output_file(python_block)
@@ -23,29 +24,37 @@ def create_output_file(python_block):
         return output_file.name
 
 
-def get_python_blocks(script):
-    block = None
-    block_indentation_level = 0
-    blocks = []
-    for line in script:
-        if "python:" in line:
-            # Start python block
-            block = PythonBlock(line)
-        elif block:
-            line_has_greater_indentation_level = (
-                get_line_indentation_level(line) > block_indentation_level
-            )
-            if line == "\n" or line_has_greater_indentation_level:
-                # Add line to python block
-                block.add_line(line)
-            else:
-                # Finish python block
-                blocks.append(block)
+class RenpyScript(object):
+    def __init__(self, script):
+        self.script = script
+        self._python_blocks = None
+
+    @property
+    def path(self):
+        return self.script.name
+
+    @property
+    def python_blocks(self):
+        if self._python_blocks is None:
+            block = None
+            self._python_blocks = []
+            for line in self.script:
+                line = RenpyScriptLine(line)
+                if "python:" in line:
+                    # Start python block
+                    block = PythonBlock(line)
+                elif block:
+                    if line == "\n" or line.indentation_level > block.indentation_level:
+                        # Add line to python block
+                        block.add_line(line)
+                    else:
+                        # Finish python block
+                        self._python_blocks.append(block)
+                        block = None
+            if block:
+                self._python_blocks.append(block)
                 block = None
-    if block:
-        blocks.append(block)
-        block = None
-    return blocks
+        return self._python_blocks
 
 
 class RenpyScriptLine(str):
