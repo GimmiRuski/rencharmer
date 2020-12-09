@@ -9,18 +9,17 @@ INDENTATION = "    "
 @click.option("--file", is_flag=True)
 @click.argument("script", type=click.File())
 def main(file, script):
-    blocks = get_python_blocks(script)
-    for block in blocks:
+    for python_block in script.python_blocks:
         if file:
-            file_path = create_output_file(block)
+            file_path = create_output_file(python_block)
             click.echo(file_path)
         else:
-            click.echo(block)
+            click.echo(python_block)
 
 
-def create_output_file(block):
+def create_output_file(python_block):
     with tempfile.NamedTemporaryFile("w", delete=False, suffix=".py") as output_file:
-        output_file.writelines(block.lines)
+        output_file.writelines(python_block.lines)
         return output_file.name
 
 
