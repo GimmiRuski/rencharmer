@@ -28,6 +28,7 @@ class RenpyScript(object):
     def __init__(self, script):
         self.script = script
         self._python_blocks = None
+        self._python_initialization_lines = None
 
     @property
     def path(self):
@@ -55,6 +56,15 @@ class RenpyScript(object):
                 self._python_blocks.append(block)
                 block = None
         return self._python_blocks
+
+    @property
+    def python_initialization_lines(self, script):
+        if self._python_initialization_lines is None:
+            self._python_initialization_lines = []
+            for i, line in enumerate(script):
+                if "python:" in line:
+                    self._python_initialization_lines.append(i)
+        return self._python_initialization_lines
 
 
 class RenpyScriptLine(str):
