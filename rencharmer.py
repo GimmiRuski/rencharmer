@@ -26,9 +26,18 @@ def create_output_file(python_block):
 
 class RenpyScript(object):
     def __init__(self, script):
-        self.script = script
+        self._lines = None
         self._python_blocks = None
-        self._python_initialization_lines = None
+        self._script = script
+
+    @property
+    def lines(self):
+        if self._lines is None:
+            self._lines = []
+            for index, line in enumerate(self.script):
+                script_line = RenpyScriptLine(line, index)
+                self._lines.append(script_line)
+        return self._lines
 
     @property
     def path(self):
@@ -39,17 +48,16 @@ class RenpyScript(object):
         if self._python_blocks is None:
             block = None
             self._python_blocks = []
-            for line in self.script:
-                line = RenpyScriptLine(line)
-                if "python:" in line:
-                    # Start python block
+            for line in self.lines:
+                if "python:" in line.content:
                     block = PythonBlock(line)
                 elif block:
-                    if line == "\n" or line.indentation_level > block.indentation_level:
-                        # Add line to python block
+                    if (
+                        line.is_empty
+                        or line.indentation_level > block.indentation_level
+                    ):
                         block.add_line(line)
                     else:
-                        # Finish python block
                         self._python_blocks.append(block)
                         block = None
             if block:
@@ -58,19 +66,30 @@ class RenpyScript(object):
         return self._python_blocks
 
     @property
-    def python_initialization_lines(self, script):
-        if self._python_initialization_lines is None:
-            self._python_initialization_lines = []
-            for i, line in enumerate(script):
-                if "python:" in line:
-                    self._python_initialization_lines.append(i)
-        return self._python_initialization_lines
+    def script(self):
+        return self._script
 
 
-class RenpyScriptLine(str):
+class RenpyScriptLine(object):
+    def __init__(self, content, index):
+        self._content = content
+        self._index = index
+
+    @property
+    def content(self):
+        return self._content
+
     @property
     def indentation_level(self):
-        return self.count(INDENTATION)
+        return self.content.count(INDENTATION)
+
+    @property
+    def index(self):
+        return self._index
+
+    @property
+    def is_empty(self):
+        return self.content == "\n"
 
 
 class PythonBlock(object):
@@ -78,25 +97,32 @@ class PythonBlock(object):
         self._indentation_level = initialization_line.indentation_level
         self.lines = []
 
-    def __str__(self):
-        return "".join(self.lines)
-
     def __add__(self, other):
         return str(self) + other
 
     def __radd__(self, other):
         return other + str(self)
 
+    def __str__(self):
+        return "".join(line.content for line in self.lines)
+
+    @property
+    def first_line(self):
+        return self.lines[0]
+
     @property
     def indentation_level(self):
         return self._indentation_level
+
+    @property
+    def last_line(self):
+        return self.lines[-1]
 
     @property
     def size(self):
         return len(self.lines)
 
     def add_line(self, line):
-        line = line.replace(INDENTATION, "", self.indentation_level + 1)
         self.lines.append(line)
 
 
