@@ -12,6 +12,13 @@ The name is inspired by [kobaltcore](https://github.com/kobaltcore)'s Ren'Py too
 
 **renCharmer** is still pretty early on in development, so expect things to break or not work. Given that and its nature (i.e. modifying source code), I would strongly recommend against using it with projects that aren't tracked using a [version control system](https://git-scm.com/).
 
+## Functions
+
+As of right now, **renCharmer** is only capable of two thing:
+
+- Printing python blocks found inside a script
+- Formatting python blocks using [black](https://github.com/psf/black)
+
 ## Usage
 
 ```
