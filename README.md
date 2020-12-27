@@ -19,7 +19,7 @@ As of right now, **renCharmer** is only capable of two thing:
 
 ## Installation
 
-1. **renCharmer** uses a few packages (namely [click](https://github.com/pallets/click), [rich](https://github.com/willmcgugan/rich) and [sh](https://github.com/amoffat/sh)), so you'll need to install them using the following command: `pip3 install click rich sh`
+1. **renCharmer** uses a few packages (namely [black](https://github.com/psf/black), [click](https://github.com/pallets/click), [rich](https://github.com/willmcgugan/rich) and [sh](https://github.com/amoffat/sh)), so you'll need to install them using the following command: `pip3 install black click rich sh`
 2. You have two options for this step:
     - Clone the repository with `git clone https://github.com/GimmiRuski/rencharmer.git`
     - Download the code from [here](https://github.com/GimmiRuski/rencharmer/archive/main.zip) and unzip it
