@@ -19,7 +19,9 @@ As of right now, **renCharmer** is only capable of two thing:
 
 ## Installation
 
-`pip install rencharmer`
+```
+pip install rencharmer
+```
 
 ## Usage
 
