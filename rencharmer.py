@@ -6,12 +6,18 @@ from rich.console import Console
 from rich.syntax import Syntax
 
 CONSOLE = Console()
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 INDENTATION = "    "
 
 
-@click.command()
-@click.option("--black", is_flag=True)
-@click.option("--print-python-blocks", is_flag=True)
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.option("-b", "--black", is_flag=True, help="Use black to format python blocks.")
+@click.option(
+    "-p",
+    "--print-python-blocks",
+    is_flag=True,
+    help="Print the python blocks that are found.",
+)
 @click.argument("script", type=click.File())
 def main(script, black, print_python_blocks):
     script = RenpyScript(script)
