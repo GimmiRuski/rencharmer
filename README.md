@@ -10,7 +10,7 @@ The name is inspired by [kobaltcore](https://github.com/kobaltcore)'s Ren'Py too
 
 ## Disclaimer
 
-**renCharmer** is still pretty early on in development, so be aware of that. I would strongly recommend against using it with projects that aren't tracked using a [version control system](https://git-scm.com/).
+**renCharmer** is still pretty early on in development, so expect things to break or not work. Given that and its nature (i.e. modifying source code), I would strongly recommend against using it with projects that aren't tracked using a [version control system](https://git-scm.com/).
 
 ## Usage
 
