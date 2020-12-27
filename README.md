@@ -19,6 +19,16 @@ As of right now, **renCharmer** is only capable of two thing:
 - Printing python blocks found inside a script
 - Formatting python blocks using [black](https://github.com/psf/black)
 
+## Installation
+
+1. **renCharmer** uses a few packages (namely [click](https://github.com/pallets/click), [rich](https://github.com/willmcgugan/rich) and [sh](https://github.com/amoffat/sh)), so you'll need to install them using the following command: `pip3 install click rich sh`
+2. You have two options for this step:
+    - Clone the repository with `git clone https://github.com/GimmiRuski/rencharmer.git`
+    - Download the code from [here](https://github.com/GimmiRuski/rencharmer/archive/main.zip) and unzip it
+3. Done!
+
+To use the `rencharmer.py` script like in the usage example, you'll have to navigate inside the folder in which it's located, so keep that in mind.
+
 ## Usage
 
 ```
