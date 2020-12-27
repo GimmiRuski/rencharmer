@@ -1,5 +1,5 @@
 # renCharmer
 
-[![Code style: black](https://img.shields.io/badge/Code%20style-black-000000.svg)](https://github.com/psf/black)
+A utility script to handle python blocks in Ren'Py scripts.
 
-A utility script to extract python blocks from Ren'Py scripts.
+The names is inspired by [kobaltcore](https://github.com/kobaltcore)'s Ren'Py tools.
