@@ -1,4 +1,4 @@
-<img align="left" width="64" height="64" src="https://github.com/GimmiRuski/rencharmer/blob/main/icon.svg">
+<img align="left" width="100" height="100" src="https://github.com/GimmiRuski/rencharmer/blob/main/icon.svg">
 
 # renCharmer
 
