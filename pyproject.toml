@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "rencharmer"
+version = "0.1.0"
+description = "A utility script to work with python blocks inside Ren'Py scripts."
+license = "MIT"
+authors = ["GimmiRuski <gimmiruski+pypi@gmail.com>"]
+readme = "README.md"
+homepage = "https://github.com/GimmiRuski/rencharmer"
+repository = "https://github.com/GimmiRuski/rencharmer"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+black = "^20.8b1"
+click = "^7.1.2"
+rich = "^9.5.1"
+sh = "^1.14.1"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+rencharmer = 'rencharmer.rencharmer:main'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
