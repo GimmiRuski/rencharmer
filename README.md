@@ -7,3 +7,7 @@
 A utility script to handle python blocks in Ren'Py scripts.
 
 The name is inspired by [kobaltcore](https://github.com/kobaltcore)'s Ren'Py tools.
+
+## Disclaimer
+
+**renCharmer** is still pretty early on in development, so be aware of that. I would strongly recommend against using it with projects that aren't tracked using a [version control system](https://git-scm.com/https://git-scm.com/).
