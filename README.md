@@ -4,7 +4,7 @@
 
 <h1 align="center">renCharmer</h1>
 
-A utility script to work with python blocks in Ren'Py scripts.
+A utility script to work with python blocks inside Ren'Py scripts.
 
 ## Disclaimer
 
