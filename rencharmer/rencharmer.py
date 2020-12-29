@@ -17,6 +17,7 @@ INDENTATION = "    "
 @click.option(
     "-a", "--analyze", is_flag=True, help="Use pylint to analyze python blocks."
 )
+@click.option("-d", "--debug", is_flag=True, help="Show debugging messages.")
 @click.option("-f", "--format", is_flag=True, help="Use black to format python blocks.")
 @click.option(
     "-p",
@@ -25,25 +26,31 @@ INDENTATION = "    "
     help="Print the python blocks that are found.",
 )
 @click.argument("script", type=click.File())
-def main(script, analyze, format, print):
+def main(script, analyze, debug, format, print):
     # pylint: disable=redefined-builtin
     script = RenpyScript(script)
     python_block_count = len(script.python_blocks)
-    plurality = "" if python_block_count == 1 else "s"
-    CONSOLE.log(f"Found {python_block_count} python block{plurality} in {script.path}")
+    if debug:
+        plurality = "" if python_block_count == 1 else "s"
+        CONSOLE.log(
+            f"Found {python_block_count} python block{plurality} in {script.path}"
+        )
     for python_block_index in range(python_block_count):
         python_block = script.python_blocks[python_block_index]
         if analyze:
-            analyze_python_block(script, python_block, python_block_index)
+            analyze_python_block(script, python_block, python_block_index, debug)
         elif format:
-            format_python_block(script, python_block, python_block_index)
+            format_python_block(script, python_block, python_block_index, debug)
         elif print:
             print_python_block(script, python_block, python_block_index)
 
 
-def analyze_python_block(script, python_block, python_block_index):
+def analyze_python_block(script, python_block, python_block_index, debug):
     file = PythonBlockFile(python_block)
-    CONSOLE.log(f"Copied python block {python_block_index} contents into {file.path}")
+    if debug:
+        CONSOLE.log(
+            f"Copied python block {python_block_index} contents into {file.path}"
+        )
     output = sh.pylint(  # pylint: disable=no-member
         f"--disable={DISABLED_PYLINT_MESSAGES}",
         "--exit-zero",
@@ -51,7 +58,8 @@ def analyze_python_block(script, python_block, python_block_index):
         "--score=no",
         file.path,
     )
-    CONSOLE.log(f"Analyzed {file.path} with pylint")
+    if debug:
+        CONSOLE.log(f"Analyzed {file.path} with pylint")
     output = output.replace(file.path, script.path)
     first_new_line = output.find("\n")
     output_length = len(output)
@@ -59,21 +67,25 @@ def analyze_python_block(script, python_block, python_block_index):
     CONSOLE.print(output, emoji=False)
 
 
-def format_python_block(script, python_block, python_block_index):
+def format_python_block(script, python_block, python_block_index, debug):
     file = PythonBlockFile(python_block)
-    CONSOLE.log(f"Copied python block {python_block_index} contents into {file.path}")
+    if debug:
+        CONSOLE.log(f"Copied python block {python_block_index} into {file.path}")
     sh.black("--target-version=py27", file.path)  # pylint: disable=no-member
-    CONSOLE.log(f"Formatted {file.path} with black")
+    if debug:
+        CONSOLE.log(f"Formatted {file.path} with black")
     script.replace_python_block(python_block, file.lines)
-    CONSOLE.log(
-        f"Replaced python block {python_block_index} in {script.path} with {file.path} contents"
-    )
+    if debug:
+        CONSOLE.log(
+            f"Replaced python block {python_block_index} in {script.path} with {file.path} contents"
+        )
     script.save_changes()
-    CONSOLE.log(f"Saved {script.path} changes")
+    if debug:
+        CONSOLE.log(f"Saved {script.path} changes")
 
 
 def print_python_block(script, python_block, python_block_index):
-    CONSOLE.log(f"Printing python block {python_block_index} from {script.path}")
+    CONSOLE.print(f"Printing python block {python_block_index} from {script.path}")
     code = str(python_block)
     syntax = Syntax(code, "python", line_numbers=True)
     CONSOLE.print(syntax)
