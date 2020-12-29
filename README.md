@@ -14,7 +14,7 @@ A utility script to work with python blocks inside Ren'Py scripts.
 
 As of right now, **renCharmer** is only capable of two thing:
 
-- Printing python blocks found inside a script
+- Analyzing python blocks using [pylint](https://github.com/PyCQA/pylint)
 - Formatting python blocks using [black](https://github.com/psf/black)
 
 ## Installation
