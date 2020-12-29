@@ -1,3 +1,4 @@
+import re
 import tempfile
 
 import click
@@ -61,9 +62,16 @@ def analyze_python_block(script, python_block, python_block_index, debug):
     if debug:
         CONSOLE.log(f"Analyzed {file.path} with pylint")
     output = output.replace(file.path, script.path)
-    first_new_line = output.find("\n")
-    output_length = len(output)
-    output = output[first_new_line + 1 : output_length - 5]
+    if debug:
+        CONSOLE.log("Replaced temporary file path with script path in pylint output")
+    output_lines = output.split("\n")
+    output_lines = output_lines[1:-1]
+    if debug:
+        CONSOLE.log("Removed first and last lines from pylint output")
+    output_lines = update_line_references(output_lines, python_block)
+    if debug:
+        CONSOLE.log("Updated line references in pylint output")
+    output = "\n".join(output_lines)
     CONSOLE.print(output, emoji=False)
 
 
@@ -89,6 +97,21 @@ def print_python_block(script, python_block, python_block_index):
     code = str(python_block)
     syntax = Syntax(code, "python", line_numbers=True)
     CONSOLE.print(syntax)
+
+
+def update_line_references(lines, python_block):
+    updated_lines = []
+    for line in lines:
+        match = re.search(":(?P<line>[0-9]+):(?P<column>[0-9]+):", line)
+        line_number, column_number = match.groups()
+        line_number = python_block.first_line.index + int(line_number)
+        indentation = (python_block.indentation_level + 1) * len(INDENTATION)
+        column_number = indentation + int(column_number) + 1
+        old_position = match[0]
+        new_position = f":{line_number}:{column_number}:"
+        line = line.replace(old_position, new_position)
+        updated_lines.append(line)
+    return updated_lines
 
 
 class RenpyScript:
