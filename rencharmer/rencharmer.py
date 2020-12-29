@@ -26,6 +26,7 @@ INDENTATION = "    "
 )
 @click.argument("script", type=click.File())
 def main(script, analyze, format, print):
+    # pylint: disable=redefined-builtin
     script = RenpyScript(script)
     python_block_count = len(script.python_blocks)
     plurality = "" if python_block_count == 1 else "s"
@@ -43,7 +44,7 @@ def main(script, analyze, format, print):
 def analyze_python_block(script, python_block, python_block_index):
     file = PythonBlockFile(python_block)
     CONSOLE.log(f"Copied python block {python_block_index} contents into {file.path}")
-    output = sh.pylint(
+    output = sh.pylint(  # pylint: disable=no-member
         f"--disable={DISABLED_PYLINT_MESSAGES}",
         "--exit-zero",
         "--jobs=0",
@@ -61,7 +62,7 @@ def analyze_python_block(script, python_block, python_block_index):
 def format_python_block(script, python_block, python_block_index):
     file = PythonBlockFile(python_block)
     CONSOLE.log(f"Copied python block {python_block_index} contents into {file.path}")
-    sh.black("--target-version=py27", file.path)
+    sh.black("--target-version=py27", file.path)  # pylint: disable=no-member
     CONSOLE.log(f"Formatted {file.path} with black")
     script.replace_python_block(python_block, file.lines)
     CONSOLE.log(
