@@ -70,8 +70,8 @@ def read_temporary_file(file_path):
 
 class RenpyScript:
     def __init__(self, file):
-        self._lines = None
         self._file = file
+        self._lines = None
 
     @property
     def file(self):
