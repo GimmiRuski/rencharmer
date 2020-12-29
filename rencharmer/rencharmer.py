@@ -7,65 +7,75 @@ from rich.syntax import Syntax
 
 CONSOLE = Console()
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+DISABLED_PYLINT_MESSAGES = ",".join(
+    ["missing-module-docstring", "undefined-variable", "useless-object-inheritance"]
+)
 INDENTATION = "    "
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "-a", "--analyze", is_flag=True, help="Use pylint to analyze python blocks."
+)
 @click.option("-f", "--format", is_flag=True, help="Use black to format python blocks.")
 @click.option(
     "-p",
-    "--print-python-blocks",
+    "--print",
     is_flag=True,
     help="Print the python blocks that are found.",
 )
 @click.argument("script", type=click.File())
-def main(script, format, print_python_blocks):
+def main(script, analyze, format, print):
     script = RenpyScript(script)
     python_block_count = len(script.python_blocks)
     plurality = "" if python_block_count == 1 else "s"
     CONSOLE.log(f"Found {python_block_count} python block{plurality} in {script.path}")
     for python_block_index in range(python_block_count):
         python_block = script.python_blocks[python_block_index]
-        if format:
-            file_path = create_temporary_file(python_block)
-            CONSOLE.log(
-                f"Copied python block {python_block_index} contents into {file_path}"
-            )
-            sh.black("--target-version=py27", file_path)
-            CONSOLE.log(f"Formatted {file_path} with black")
-            modified_lines = read_temporary_file(file_path)
-            script.replace_python_block(python_block, modified_lines)
-            CONSOLE.log(
-                f"Replaced python block {python_block_index} in {script.path} with {file_path} contents"
-            )
-            script.save_changes()
-            CONSOLE.log(f"Saved {script.path} changes")
-        elif print_python_blocks:
-            CONSOLE.log(
-                f"Printing python block {python_block_index} from {script.path}"
-            )
-            code = str(python_block)
-            syntax = Syntax(code, "python", line_numbers=True)
-            CONSOLE.print(syntax)
+        if analyze:
+            analyze_python_block(script, python_block, python_block_index)
+        elif format:
+            format_python_block(script, python_block, python_block_index)
+        elif print:
+            print_python_block(script, python_block, python_block_index)
 
 
-def create_temporary_file(python_block):
-    with tempfile.NamedTemporaryFile("w", delete=False, suffix=".py") as output_file:
-        indentation_level = python_block.indentation_level + 1
-        output_file.writelines(
-            line.content.replace(INDENTATION, "", indentation_level)
-            for line in python_block.lines
-        )
-        return output_file.name
+def analyze_python_block(script, python_block, python_block_index):
+    file = PythonBlockFile(python_block)
+    CONSOLE.log(f"Copied python block {python_block_index} contents into {file.path}")
+    output = sh.pylint(
+        f"--disable={DISABLED_PYLINT_MESSAGES}",
+        "--exit-zero",
+        "--jobs=0",
+        "--score=no",
+        file.path,
+    )
+    CONSOLE.log(f"Analyzed {file.path} with pylint")
+    output = output.replace(file.path, script.path)
+    first_new_line = output.find("\n")
+    output_length = len(output)
+    output = output[first_new_line + 1 : output_length - 5]
+    CONSOLE.print(output, emoji=False)
 
 
-def read_temporary_file(file_path):
-    lines = []
-    with open(file_path, "r") as file:
-        for line_index, line in enumerate(file):
-            line = RenpyScriptLine(line, line_index)
-            lines.append(line)
-    return lines
+def format_python_block(script, python_block, python_block_index):
+    file = PythonBlockFile(python_block)
+    CONSOLE.log(f"Copied python block {python_block_index} contents into {file.path}")
+    sh.black("--target-version=py27", file.path)
+    CONSOLE.log(f"Formatted {file.path} with black")
+    script.replace_python_block(python_block, file.lines)
+    CONSOLE.log(
+        f"Replaced python block {python_block_index} in {script.path} with {file.path} contents"
+    )
+    script.save_changes()
+    CONSOLE.log(f"Saved {script.path} changes")
+
+
+def print_python_block(script, python_block, python_block_index):
+    CONSOLE.log(f"Printing python block {python_block_index} from {script.path}")
+    code = str(python_block)
+    syntax = Syntax(code, "python", line_numbers=True)
+    CONSOLE.print(syntax)
 
 
 class RenpyScript:
