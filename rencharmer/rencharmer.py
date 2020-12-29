@@ -173,5 +173,29 @@ class PythonBlock:
         return self.lines[-1]
 
 
+class PythonBlockFile:
+    def __init__(self, python_block):
+        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".py") as file:
+            indentation_level = python_block.indentation_level + 1
+            file.writelines(
+                line.content.replace(INDENTATION, "", indentation_level)
+                for line in python_block.lines
+            )
+            self._path = file.name
+
+    @property
+    def path(self):
+        return self._path
+
+    @property
+    def lines(self):
+        lines = []
+        with open(self.path, "r") as file:
+            for line_index, line in enumerate(file):
+                line = RenpyScriptLine(line, line_index)
+                lines.append(line)
+        return lines
+
+
 if __name__ == "__main__":
     main()
