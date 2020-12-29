@@ -30,9 +30,11 @@ $ rencharmer -h
 Usage: rencharmer [OPTIONS] SCRIPT
 
 Options:
-  -b, --black                Use black to format python blocks.
-  -p, --print-python-blocks  Print the python blocks that are found.
-  -h, --help                 Show this message and exit.
+  -a, --analyze  Use pylint to analyze python blocks.
+  -d, --debug    Show debugging messages.
+  -f, --format   Use black to format python blocks.
+  -p, --print    Print the python blocks that are found.
+  -h, --help     Show this message and exit.
 ```
 
 ## Credits
