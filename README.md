@@ -12,7 +12,7 @@ A utility script to work with python blocks inside Ren'Py scripts.
 
 ## Functions
 
-As of right now, **renCharmer** is only capable of two thing:
+As of right now, **renCharmer** is capable of doing the following:
 
 - Analyzing python blocks using [pylint](https://github.com/PyCQA/pylint)
 - Formatting python blocks using [black](https://github.com/psf/black)
