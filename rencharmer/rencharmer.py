@@ -11,7 +11,7 @@ INDENTATION = "    "
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
-@click.option("-b", "--black", is_flag=True, help="Use black to format python blocks.")
+@click.option("-f", "--format", is_flag=True, help="Use black to format python blocks.")
 @click.option(
     "-p",
     "--print-python-blocks",
@@ -19,14 +19,14 @@ INDENTATION = "    "
     help="Print the python blocks that are found.",
 )
 @click.argument("script", type=click.File())
-def main(script, black, print_python_blocks):
+def main(script, format, print_python_blocks):
     script = RenpyScript(script)
     python_block_count = len(script.python_blocks)
     plurality = "" if python_block_count == 1 else "s"
     CONSOLE.log(f"Found {python_block_count} python block{plurality} in {script.path}")
     for python_block_index in range(python_block_count):
         python_block = script.python_blocks[python_block_index]
-        if black:
+        if format:
             file_path = create_temporary_file(python_block)
             CONSOLE.log(
                 f"Copied python block {python_block_index} contents into {file_path}"
