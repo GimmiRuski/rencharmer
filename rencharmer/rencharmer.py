@@ -26,6 +26,7 @@ INDENTATION = "    "
     is_flag=True,
     help="Print the python blocks that are found.",
 )
+@click.version_option(None, "-v", "--version")
 @click.argument("script", type=click.File())
 def main(script, analyze, debug, format, print):
     # pylint: disable=redefined-builtin

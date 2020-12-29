@@ -34,6 +34,7 @@ Options:
   -d, --debug    Show debugging messages.
   -f, --format   Use black to format python blocks.
   -p, --print    Print the python blocks that are found.
+  -v, --version  Show the version and exit.
   -h, --help     Show this message and exit.
 ```
 
