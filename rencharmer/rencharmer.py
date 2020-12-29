@@ -105,7 +105,7 @@ class RenpyScript:
                 block = PythonBlock(line.indentation_level)
             elif block:
                 if line.is_empty or line.indentation_level > block.indentation_level:
-                    block.add_line(line)
+                    block.lines.append(line)
                 else:
                     python_blocks.append(block)
                     block = None
@@ -171,13 +171,6 @@ class PythonBlock:
     @property
     def last_line(self):
         return self.lines[-1]
-
-    @property
-    def size(self):
-        return len(self.lines)
-
-    def add_line(self, line):
-        self.lines.append(line)
 
 
 if __name__ == "__main__":
