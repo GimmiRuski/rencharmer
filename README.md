@@ -27,7 +27,7 @@ pip install rencharmer
 
 ```
 $ rencharmer -h
-Usage: rencharmer [OPTIONS] SCRIPT
+Usage: rencharmer [OPTIONS] [SCRIPTS]...
 
 Options:
   -a, --analyze  Use pylint to analyze python blocks.

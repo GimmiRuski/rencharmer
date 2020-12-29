@@ -27,24 +27,27 @@ INDENTATION = "    "
     help="Print the python blocks that are found.",
 )
 @click.version_option(None, "-v", "--version")
-@click.argument("script", type=click.File())
-def main(script, analyze, debug, format, print):
+@click.argument("scripts", nargs=-1, type=click.File())
+def main(scripts, analyze, debug, format, print):
     # pylint: disable=redefined-builtin
-    script = RenpyScript(script)
-    python_block_count = len(script.python_blocks)
-    if debug:
-        plurality = "" if python_block_count == 1 else "s"
-        CONSOLE.log(
-            f"Found {python_block_count} python block{plurality} in {script.path}"
-        )
-    for python_block_index in range(python_block_count):
-        python_block = script.python_blocks[python_block_index]
-        if analyze:
-            analyze_python_block(script, python_block, python_block_index, debug)
-        elif format:
-            format_python_block(script, python_block, python_block_index, debug)
-        elif print:
-            print_python_block(script, python_block, python_block_index)
+    for script in scripts:
+        script = RenpyScript(script)
+        if debug:
+            CONSOLE.log(f"Working on {script.path}")
+        python_block_count = len(script.python_blocks)
+        if debug:
+            plurality = "" if python_block_count == 1 else "s"
+            CONSOLE.log(
+                f"Found {python_block_count} python block{plurality} in {script.path}"
+            )
+        for python_block_index in range(python_block_count):
+            python_block = script.python_blocks[python_block_index]
+            if analyze:
+                analyze_python_block(script, python_block, python_block_index, debug)
+            elif format:
+                format_python_block(script, python_block, python_block_index, debug)
+            elif print:
+                print_python_block(script, python_block, python_block_index)
 
 
 def analyze_python_block(script, python_block, python_block_index, debug):
