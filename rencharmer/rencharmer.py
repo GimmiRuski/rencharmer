@@ -73,7 +73,8 @@ def analyze_python_block(script, python_block, python_block_index, debug):
     if debug:
         CONSOLE.log("Updated line references in pylint output")
     output = "\n".join(output_lines)
-    CONSOLE.print(output, emoji=False)
+    if output:
+        CONSOLE.print(output, emoji=False)
 
 
 def format_python_block(script, python_block, python_block_index, debug):
