@@ -101,7 +101,8 @@ def print_python_block(script, python_block, python_block_index):
     CONSOLE.print(f"Printing python block {python_block_index} from {script.path}")
     code = str(python_block)
     syntax = Syntax(code, "python", line_numbers=True)
-    CONSOLE.print(syntax)
+    panel = Panel(syntax)
+    CONSOLE.print(panel)
 
 
 def update_line_references(lines, python_block):
