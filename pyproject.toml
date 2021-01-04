@@ -16,6 +16,8 @@ rich = "^9.5.1"
 sh = "^1.14.1"
 
 [tool.poetry.dev-dependencies]
+isort = "^5.7.0"
+pylint = "^2.6.0"
 
 [tool.poetry.scripts]
 rencharmer = 'rencharmer.rencharmer:main'
