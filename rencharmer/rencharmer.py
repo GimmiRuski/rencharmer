@@ -13,6 +13,7 @@ DISABLED_PYLINT_MESSAGES = ",".join(
     ["missing-module-docstring", "undefined-variable", "useless-object-inheritance"]
 )
 INDENTATION = "    "
+INDENTATION_LENGTH = len(INDENTATION)
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
@@ -116,7 +117,7 @@ def update_line_references(lines, python_block):
         match = re.search(":(?P<line>[0-9]+):(?P<column>[0-9]+):", line)
         line_number, column_number = match.groups()
         line_number = python_block.first_line.index + int(line_number)
-        indentation = (python_block.indentation_level + 1) * len(INDENTATION)
+        indentation = (python_block.indentation_level + 1) * INDENTATION_LENGTH
         column_number = indentation + int(column_number) + 1
         old_position = match[0]
         new_position = f":{line_number}:{column_number}:"
