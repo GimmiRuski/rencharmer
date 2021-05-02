@@ -7,6 +7,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
 
+BLACK_LINE_LENGTH = 88
 CONSOLE = Console()
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 DISABLED_PYLINT_MESSAGES = ",".join(
@@ -87,10 +88,15 @@ def analyze_python_block(script, python_block, python_block_index, debug):
 
 
 def format_python_block(script, python_block, python_block_index, debug):
+    indentation_level = python_block.indentation_level + 1
+    indentation = indentation_level * INDENTATION_LENGTH
+    line_length = BLACK_LINE_LENGTH - indentation
     file = PythonBlockFile(python_block)
     if debug:
         CONSOLE.log(f"Copied python block {python_block_index} into {file.path}")
-    sh.black("--target-version=py27", file.path)  # pylint: disable=no-member
+    sh.black(  # pylint: disable=no-member
+        f"--line-length={line_length}", "--target-version=py27", file.path
+    )
     if debug:
         CONSOLE.log(f"Formatted {file.path} with black")
     script.replace_python_block(python_block, file.lines)
