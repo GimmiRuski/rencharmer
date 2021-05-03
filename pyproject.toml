@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rencharmer"
-version = "0.3.1"
+version = "0.4.0"
 description = "A utility script to work with python blocks inside Ren'Py scripts."
 license = "MIT"
 authors = ["GimmiRuski <gimmiruski+pypi@gmail.com>"]

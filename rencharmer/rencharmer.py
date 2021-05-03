@@ -1,5 +1,6 @@
 import re
 import tempfile
+from copy import copy
 
 import click
 import sh
@@ -60,9 +61,7 @@ def main(scripts, analyze, debug, format, print):
 def analyze_python_block(script, python_block, python_block_index, debug):
     file = PythonBlockFile(python_block)
     if debug:
-        CONSOLE.log(
-            f"Copied python block {python_block_index} contents into {file.path}"
-        )
+        CONSOLE.log(f"Copied python block {python_block_index} into {file.path}")
     output = sh.pylint(  # pylint: disable=no-member
         f"--disable={DISABLED_PYLINT_MESSAGES}",
         "--exit-zero",
@@ -171,6 +170,7 @@ class RenpyScript:
                 if line.is_empty or line.indentation_level > block.indentation_level:
                     block.lines.append(line)
                 else:
+                    block = block.stripped()
                     python_blocks.append(block)
                     block = None
         if block:
@@ -235,6 +235,16 @@ class PythonBlock:
     @property
     def last_line(self):
         return self.lines[-1]
+
+    def stripped(self):
+        lines = copy(self.lines)
+        line = lines[-1]
+        while line.is_empty:
+            lines.pop()
+            line = lines[-1]
+        python_block = PythonBlock(self.indentation_level)
+        python_block.lines = lines
+        return python_block
 
 
 class PythonBlockFile:
