@@ -40,5 +40,5 @@ Options:
 
 ## Credits
 
-- The name is inspired by [kobaltcore](https://github.com/kobaltcore)'s Ren'Py tools
-- The icon is from [game-icons.net](https://game-icons.net/)
+- [Game-icons.net](https://game-icons.net/) - For the project's icon
+- [Kobaltcore](https://github.com/kobaltcore) - For the project's name style
